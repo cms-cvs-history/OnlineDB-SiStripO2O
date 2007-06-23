@@ -1,0 +1,51 @@
+<use name=boost>
+<use name=root>
+
+<use name=FWCore/Framework>
+<use name=FWCore/MessageLogger>
+<use name=FWCore/ParameterSet>
+<use name=FWCore/PluginManager>
+
+<use name=CondCore/DBOutputService>
+
+<use name=CondFormats/SiStripObjects>
+
+<use name=CalibFormats/SiStripObjects>
+<use name=CalibTracker/SiStripConnectivity>
+<use name=CalibTracker/Records>
+
+<use name=DataFormats/SiStripDetId>
+
+<use name=OnlineDB/SiStripConfigDb>
+
+<use name=Geometry/TrackerGeometryBuilder>
+
+<library file="*.cc" name=OnlineDBSiStripO2Otest>
+<flags SEAL_PLUGIN_NAME="OnlineDBSiStripO2Otest">
+</library>
+
+<export>
+<lib name=OnlineDBSiStripO2Otest>
+
+<use name=boost>
+<use name=root>
+
+<use name=FWCore/Framework>
+<use name=FWCore/MessageLogger>
+<use name=FWCore/ParameterSet>
+
+<use name=CondCore/DBOutputService>
+
+<use name=CondFormats/SiStripObjects>
+
+<use name=CalibFormats/SiStripObjects>
+<use name=CalibTracker/SiStripConnectivity>
+<use name=CalibTracker/Records>
+
+<use name=DataFormats/SiStripDetId>
+
+<use name=OnlineDB/SiStripConfigDb>
+
+<use name=Geometry/TrackerGeometryBuilder>
+
+</export>
