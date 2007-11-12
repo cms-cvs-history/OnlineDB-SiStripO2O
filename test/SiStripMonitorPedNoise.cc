@@ -1,4 +1,6 @@
 #include "OnlineDB/SiStripO2O/test/SiStripMonitorPedNoise.h"
+#include "CalibTracker/SiStripCommon/interface/SiStripDetInfoFileReader.h"
+#include "FWCore/ParameterSet/interface/FileInPath.h"
 
 static const uint16_t _NUM_SISTRIP_SUBDET_ = 4;
 std::string SubDet[_NUM_SISTRIP_SUBDET_]={"TIB","TID","TOB","TEC"};
@@ -28,11 +30,7 @@ void SiStripMonitorPedNoise::analyze(const edm::Event& e, const edm::EventSetup&
   
 
   //get cabling
-  //es.get<SiStripDetCablingRcd>().get( SiStripDetCabling_ );
-
-  //get geom    
-  es.get<TrackerDigiGeometryRecord>().get( tkgeom );
-  edm::LogInfo("SiStripMonitorPedNoise") << "[SiStripMonitorPedNoise::analyze] There are "<<tkgeom->detUnits().size() <<" detectors instantiated in the geometry" << std::endl;  
+  es.get<SiStripDetCablingRcd>().get( SiStripDetCabling_ );
 
   es.get<SiStripPedestalsRcd>().get(SiStripPedestals_);
   es.get<SiStripNoisesRcd>().get(SiStripNoises_);
@@ -47,10 +45,62 @@ void SiStripMonitorPedNoise::analyze(const edm::Event& e, const edm::EventSetup&
   //Fill Histos
   fillHistos();
 
+  /////////////
 
-  //  std::vector<uint32_t> vdetId_;
-  //SiStripDetCabling_->addActiveDetectorsRawIds(vdetId_);
-  //std::cout << "Number of detid detected " << vdetId_.size() << std::endl;
+  
+  std::vector<uint32_t> det_ids;
+  SiStripDetCabling_->addActiveDetectorsRawIds(det_ids);
+  if ( det_ids.empty() ) {
+    edm::LogWarning("SiStripMonitorPedNoise")
+      << "detids vetor empty";
+  }  
+  edm::LogInfo("SiStripMonitorPedNoise") << " Cabling Found " << det_ids.size() << " active DetIds";
+  if (edm::isDebugEnabled()){
+    // Iterate through active DetIds
+    std::vector<uint32_t>::const_iterator det_id = det_ids.begin();
+    for ( ; det_id != det_ids.end(); det_id++ ) {
+      edm::LogInfo("SiStripMonitorPedNoise") << " detid " << *det_id << std::endl;
+    }    
+  }
+
+
+  //COPY NOISE
+  std::vector<uint32_t> ndetid;
+  SiStripNoises_->getDetIds(ndetid);
+  edm::LogInfo("SiStripMonitorPedNoise") << " Noise Found " << ndetid.size() << " DetIds";
+  for (size_t id=0;id<ndetid.size();id++){
+    SiStripNoises::Range range=SiStripNoises_->getRange(ndetid[id]);
+
+    if (edm::isDebugEnabled()){
+      int strip=0;
+      LogTrace("SiStripMonitorPedNoise")  << "NOISE detid " << ndetid[id] << " \t"
+			      << " strip " << strip << " \t"
+			      << SiStripNoises_->getNoise(strip,range)     << " \t" 
+			      << SiStripNoises_->getDisable(strip,range)   << " \t" 
+			      << std::endl; 	    
+    } 
+  }
+
+  //COPY PED
+  std::vector<uint32_t> pdetid;
+  SiStripPedestals_->getDetIds(pdetid);
+  edm::LogInfo("SiStripMonitorPedNoise") << " Peds Found " << pdetid.size() << " DetIds";
+  for (size_t id=0;id<pdetid.size();id++){
+    SiStripPedestals::Range range=SiStripPedestals_->getRange(pdetid[id]);
+
+    if (edm::isDebugEnabled()){
+      int strip=0;
+      LogTrace("SiStripMonitorPedNoise")  << "PED detid " << pdetid[id] << " \t"
+			      << " strip " << strip << " \t"
+			      << SiStripPedestals_->getPed   (strip,range)   << " \t" 
+			      << SiStripPedestals_->getLowTh (strip,range)   << " \t" 
+			      << SiStripPedestals_->getHighTh(strip,range)   << " \t" 
+			      << std::endl; 	    
+    } 
+  }  
+
+  /////////////////
+
   
   fFile->ls();
 
@@ -260,18 +310,15 @@ bool SiStripMonitorPedNoise::book(){
 }
 
 void SiStripMonitorPedNoise::fillSubDet_Layer_DetList(){
-    
-  //Compare Geometry 
-  for(TrackerGeometry::DetUnitContainer::const_iterator it = tkgeom->detUnits().begin(); it != tkgeom->detUnits().end(); it++){           
-    uint32_t detid=((*it)->geographicalId()).rawId();       
 
-    const StripGeomDetUnit* _StripGeomDetUnit = dynamic_cast<const StripGeomDetUnit*>(tkgeom->idToDetUnit(DetId(detid)));
-    if (_StripGeomDetUnit==0){
-      //edm::LogError("SiStripMonitorPedNoise")<< "[SiStripMonitorPedNoise::fillSubDet_Layer_DetList] the detID " << detid << " doesn't seem to belong to Tracker" << std::endl; 
-      continue;
-    }      
+  SiStripDetInfoFileReader reader(edm::FileInPath(std::string("CalibTracker/SiStripCommon/data/SiStripDetInfo.dat") ).fullPath());
+  const std::vector<uint32_t> DetIds = reader.getAllDetIds();
+  
+  std::vector<uint32_t>::const_iterator it=DetIds.begin();
+  for(;it!=DetIds.end();++it){
+    uint32_t detid=*it;
     
-    short Nstrips = _StripGeomDetUnit->specificTopology().nstrips();
+    short Nstrips = reader.getNumberOfApvsAndStripLength(detid).first*128;
   
     SiStripDetId a(detid);
     if ( a.subdetId() == 3 ){

@@ -12,14 +12,6 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
-#include "Geometry/TrackerGeometryBuilder/interface/TrackerGeometry.h"  
-#include "Geometry/Records/interface/TrackerDigiGeometryRecord.h"
-#include "Geometry/CommonDetUnit/interface/GeomDetUnit.h"
-#include "Geometry/TrackerGeometryBuilder/interface/StripGeomDetUnit.h"
-#include "Geometry/CommonTopologies/interface/StripTopology.h"
-#include "Geometry/CommonDetUnit/interface/GeomDetType.h"
-#include "Geometry/CommonDetUnit/interface/GeomDetEnumerators.h"
-
 //needed for the geometry:
 #include "DataFormats/DetId/interface/DetId.h"
 #include "DataFormats/SiStripDetId/interface/StripSubdetector.h"
@@ -72,8 +64,6 @@ class SiStripMonitorPedNoise : public edm::EDAnalyzer
   void fillHistos();
   
   edm::ParameterSet conf_;
-  const StripTopology* topol;
-  edm::ESHandle<TrackerGeometry> tkgeom;
   edm::ESHandle<SiStripDetCabling> SiStripDetCabling_;
   edm::ESHandle<SiStripPedestals> SiStripPedestals_;
   edm::ESHandle<SiStripNoises> SiStripNoises_;
