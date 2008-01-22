@@ -228,18 +228,17 @@ void MakeTrend(char* outdir){
 	
 	if ( obj->IsA()->InheritsFrom( "TH1" ) ) {
 	  TH1F* h = (TH1F*)obj;
-	  if (!h->GetEntries())
-	    continue;
-	  	  
+
 	  std::string thisHisto=TString(obj->GetTitle()).ReplaceAll("DBNoiseHisto_","").Data();
 	  Meas_.iRun=count;
 	  Meas_.mean=h->GetMean();
 	  Meas_.rms=h->GetRMS();
-	  //std::cout << "\t\t " << thisHisto << " " << count << " " << Meas_.mean << " " << Meas_.rms << endl;
-
-
-	  std::cout << " \t\t " << thisHisto << " \t\t " << h->GetEntries();
+	  //std::cout << "\n\t " << thisHisto << " " << count << " " << Meas_.mean << " " << Meas_.rms << endl;
+	  //std::cout << " \t\t " << thisHisto << " \t\t " << h->GetEntries();
         
+	  int Nstrip=h->GetEntries()-h->GetBinContent(1);
+	  std::cout << " \t\t " << thisHisto << " \t\t " << Nstrip;
+
 	  mapLayerData[thisHisto].push_back(Meas_);
 	}
       }
@@ -276,6 +275,7 @@ void MakeTrend(char* outdir){
       for (std::vector<Meas>::const_iterator jter=iter->second.begin(); jter!=iter->second.end();++jter){
 	if (jter==iter->second.begin()){
 	  maxPads=(jLayer)/6;
+	  std::cout << "maxPads " << maxPads << std::endl;
 	  gr[maxPads].push_back((TH1F*) baseHisto.Clone(iter->first.c_str() ) );
 	  gr[maxPads].back()->SetMarkerStyle(24+(int) jLayer/6);
 	  gr[maxPads].back()->SetMarkerColor(jLayer%6+1);
@@ -284,20 +284,26 @@ void MakeTrend(char* outdir){
 	}
 	double val=jter->mean;
 	double rms=jter->rms;
-	//	std::cout << iter->first << " " << jter->iRun << " " << val << endl;
+	//std::cout << iter->first << " " << jter->iRun<< " " << RunList[jter->iRun].c_str() << " " << val << endl;
 	gr[maxPads].back()->SetBinContent(jter->iRun+1,val<10?val:10);
-	gr[maxPads].back()->SetBinError(jter->iRun+1,0,rms<10?rms:10);
+	gr[maxPads].back()->SetBinError(jter->iRun+1,0,rms>0?rms:.001);
       }
       jLayer++;
     }
     
     for (int iPad=0;iPad<=maxPads;++iPad){
       C->cd(iPad+1);
+      //      std::cout << "iPad " << iPad << " " << gr[iPad].size() << std::endl;
+      bool first=true;
       for(int ih=0;ih<gr[iPad].size();++ih){
-	gr[iPad][ih]->SetMaximum(10);
-	gr[iPad][ih]->Draw(ih==0?"E1":"sameE1");
+	if (gr[iPad][ih]!=NULL){  
+	  //	  std::cout << "ih " << ih << std::endl;
+	  gr[iPad][ih]->SetMaximum(10);
+	  gr[iPad][ih]->Draw(first==true?"E1":"sameE1");
+	  first=false;
+	}
       }
-      
+
       TAxis* axis=gr[iPad][0]->GetXaxis();
       axis->SetTitle("Run");
       axis->SetTitleOffset(2.0);
@@ -312,9 +318,10 @@ void MakeTrend(char* outdir){
       }
       gPad->SetGridx();
     }
-    C->Update();    
-    C->Print(std::string(std::string(outdir)+"_"+SubDet[iSubDet]+".png").c_str());
+    C->Update();  
+    std::cout << std::string(std::string(outdir)+"_"+SubDet[iSubDet]+".png").c_str() << std::endl;
     C->Print(std::string(std::string(outdir)+"_"+SubDet[iSubDet]+".eps").c_str());
+    C->Print(std::string(std::string(outdir)+"_"+SubDet[iSubDet]+".png").c_str());
   }
 }
 
