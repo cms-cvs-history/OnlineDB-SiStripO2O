@@ -4,7 +4,8 @@ function usage(){
     echo -e "\n[usage] SiStripMonitorPedNoise.sh [options]"
     echo -e " -help  this message"
     echo -e " -run=<runNb>"
-    echo -e " -tagPN=<tag for PedNoise> (default is ${default_tagPN} )"
+    echo -e " -tagP=<tag for Ped> (default is ${default_tagP} )"
+    echo -e " -tagN=<tag for Noise> (default is ${default_tagN} )"
     echo -e " -tagCab=<tag for cabling> (default is ${default_tagCab} )"
     echo -e " -CondDb=<sqlite>, <devdb10>, <orcon>, <orcoff> (default is sqlite)"
     echo -e " -sqliteDb=<dbfile> (needed for CondDb=sqlite - default is /tmp/$USER/dummy_<runNb>.db)"
@@ -31,7 +32,8 @@ function getParameter(){
 ## MAIN
 #################
 
-default_tagPN=SiStripPedNoise_v1
+default_tagP=SiStripPedNoise_v1
+default_tagN=SiStripPedNoise_v1
 default_tagCab=SiStripCabling_v1
 default_tagIOV=v1
 
@@ -41,7 +43,8 @@ test_area=/tmp/$USER/MonitorO2O
 [ ! -e ${test_area} ] && mkdir -p ${test_area}
 
 getParameter run            $@ -1
-getParameter tagPN          $@ ${default_tagPN}
+getParameter tagP          $@ ${default_tagP}
+getParameter tagN          $@ ${default_tagN}
 getParameter tagCab         $@ ${default_tagCab}
 getParameter tagIOV         $@ ${default_tagIOV}
 getParameter CondDb         $@ sqlite
@@ -72,7 +75,8 @@ else
 fi
 
 echo -e " -run=$run"
-echo -e " -tagPN=$tagPN"
+echo -e " -tagP=$tagP"
+echo -e " -tagN=$tagN"
 echo -e " -tagCab=$tagCab"
 echo -e " -tagIOV=$tagIOV"
 
@@ -98,7 +102,7 @@ templatefile=${CMSSW_BASE}/src/OnlineDB/SiStripO2O/test/MonitorO2O/template_SiSt
 [ ! -e $templatefile ] && templatefile=${CMSSW_RELEASE_BASE}/src/OnlineDB/SiStripO2O/test/MonitorO2O/template_SiStripMonitorPedNoise.cfg
 [ ! -e $templatefile ] && echo "ERROR: expected template file doesn't exist both in your working area and in release area. Please fix it." && exit
 
-cat $templatefile | sed -e "s#insert_runNb#${run}#g" -e "s#insert_DBfile#$DBfile#" -e "s#insert_DBcatalog#$DBcatalog#" -e "s#insert_output_filename#${output_file_name}#"  -e "s#insert_tagPN#${tagPN}#g"  -e "s#insert_tagCab#${tagCab}#g" > ${cfg_file}
+cat $templatefile | sed -e "s#insert_runNb#${run}#g" -e "s#insert_DBfile#$DBfile#" -e "s#insert_DBcatalog#$DBcatalog#" -e "s#insert_output_filename#${output_file_name}#"  -e "s#insert_tagP#${tagP}#g" -e "s#insert_tagN#${tagN}#g"  -e "s#insert_tagCab#${tagCab}#g" > ${cfg_file}
 echo "cmsRun ${cfg_file}"
 cmsRun ${cfg_file} > ${out_file}
 
