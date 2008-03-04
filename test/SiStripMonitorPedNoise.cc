@@ -76,7 +76,6 @@ void SiStripMonitorPedNoise::analyze(const edm::Event& e, const edm::EventSetup&
       LogTrace("SiStripMonitorPedNoise")  << "NOISE detid " << ndetid[id] << " \t"
 			      << " strip " << strip << " \t"
 			      << SiStripNoises_->getNoise(strip,range)     << " \t" 
-			      << SiStripNoises_->getDisable(strip,range)   << " \t" 
 			      << std::endl; 	    
     } 
   }
