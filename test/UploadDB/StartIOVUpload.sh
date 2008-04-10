@@ -37,7 +37,7 @@ connectstringC="oracle://orcon/CMS_COND_STRIP"
 connectstring=${connectstringC}
 
 USER=CMS_COND_STRIP
-PASSWD=SSWDC3MCAI8HQHTC
+PASSWD=xxxxx
 #authPath=/afs/cern.ch/cms/DB/conddb
 authPath=/afs/cern.ch/user/x/xiezhen/auth/orconowner
 
@@ -86,7 +86,7 @@ fi
 mkdir log
 echo -e "\n---------------------------------\n"
 echo 'wget -q -r "http://cmsdaq.cern.ch/cmsmon/cmsdb/servlet/RunSummaryTIF?RUN_BEGIN=1&RUN_END=1000000000&TEXT=1&DB=omds" -O log/AllRuns.txt'
-wget -q -r "http://cmsdaq.cern.ch/cmsmon/cmsdb/servlet/RunSummaryTIF?RUN_BEGIN=1&RUN_END=1000000000&TEXT=1&DB=omds" -O log/AllRuns.txt
+#wget -q -r "http://cmsdaq.cern.ch/cmsmon/cmsdb/servlet/RunSummaryTIF?RUN_BEGIN=1&RUN_END=1000000000&TEXT=1&DB=omds" -O log/AllRuns.txt
 
 echo "extracting o2o runs"
 echo 
