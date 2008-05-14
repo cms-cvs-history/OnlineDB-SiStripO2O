@@ -92,8 +92,6 @@ void SiStripMonitorPedNoise::analyze(const edm::Event& e, const edm::EventSetup&
       LogTrace("SiStripMonitorPedNoise")  << "PED detid " << pdetid[id] << " \t"
 			      << " strip " << strip << " \t"
 			      << SiStripPedestals_->getPed   (strip,range)   << " \t" 
-			      << SiStripPedestals_->getLowTh (strip,range)   << " \t" 
-			      << SiStripPedestals_->getHighTh(strip,range)   << " \t" 
 			      << std::endl; 	    
     } 
   }  
