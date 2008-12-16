@@ -9,7 +9,6 @@
 <use name=CondCore/DBOutputService>
 <use name=CondFormats/SiStripObjects>
 <use name=CalibFormats/SiStripObjects>
-<use name=CalibTracker/SiStripConnectivity>
 <use name=CalibTracker/Records>
 <use name=CalibTracker/SiStripCommon>
 <use name=DataFormats/SiStripDetId>
