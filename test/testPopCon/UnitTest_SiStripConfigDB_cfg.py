@@ -32,24 +32,24 @@ process.SiStripConfigDb.UsingDb = True
 process.SiStripConfigDb.ConfDb = ''
 process.SiStripConfigDb.Partitions = cms.untracked.PSet(
     PartTIBD = cms.untracked.PSet(
-    ForceVersions = cms.untracked.bool(True),
-    ForceCurrentState = cms.untracked.bool(False),
-    CablingVersion = cms.untracked.vuint32(67, 8),
-    FecVersion = cms.untracked.vuint32(375, 0),
-    DcuDetIdsVersion = cms.untracked.vuint32(8, 0),
-    FedVersion = cms.untracked.vuint32(469, 0),
     PartitionName = cms.untracked.string('TI_08-AUG-2008_1'),
-    DcuPsuMapVersion = cms.untracked.vuint32(0, 0)
+    DcuDetIdsVersion = cms.untracked.vuint32(9, 0),
+    RunNumber = cms.untracked.uint32(55212)
     ),
-    PartTOB = cms.untracked.PSet(
-    ForceVersions = cms.untracked.bool(True),
-    ForceCurrentState = cms.untracked.bool(False),
-    CablingVersion = cms.untracked.vuint32(66, 5),
-    FecVersion = cms.untracked.vuint32(376, 0),
-    DcuDetIdsVersion = cms.untracked.vuint32(8, 0),
-    FedVersion = cms.untracked.vuint32(470, 0),
+    PartTECP = cms.untracked.PSet(
+    PartitionName = cms.untracked.string('TP_08-AUG-2008_1'),
+    DcuDetIdsVersion = cms.untracked.vuint32(9, 0),
+    RunNumber = cms.untracked.uint32(54986)
+    ),
+     PartTECM = cms.untracked.PSet(
+    PartitionName = cms.untracked.string('TM_08-AUG-2008_1'),
+    DcuDetIdsVersion = cms.untracked.vuint32(9, 0),
+    RunNumber = cms.untracked.uint32(54951)
+    ),
+     PartTOB = cms.untracked.PSet(
     PartitionName = cms.untracked.string('TO_08-AUG-2008_1'),
-    DcuPsuMapVersion = cms.untracked.vuint32(0, 0)
+    DcuDetIdsVersion = cms.untracked.vuint32(9, 0),
+    RunNumber = cms.untracked.uint32(55112)
     )
     )
 process.SiStripConfigDb.TNS_ADMIN = ''
