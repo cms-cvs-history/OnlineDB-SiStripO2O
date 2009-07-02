@@ -48,7 +48,9 @@ process.CommonSiStripPopConParams = cms.PSet(
     loggingOn = cms.untracked.bool(True)
 )
 
+process.load("OnlineDB.SiStripO2O.SiStripO2OCalibrationFactors_cfi")
 process.siStripPopConNoise = cms.EDAnalyzer("SiStripPopConNoiseUnitTest",
+    process.SiStripO2OCalibrationFactors,
     process.CommonSiStripPopConParams,
     record = cms.string('SiStripNoisesRcd')
 )
