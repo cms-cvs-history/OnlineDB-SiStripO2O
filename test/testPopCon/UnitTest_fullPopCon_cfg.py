@@ -48,8 +48,10 @@ process.SiStripConfigDb.TNS_ADMIN = ''
 
 process.SiStripDetInfoFileReader = cms.Service("SiStripDetInfoFileReader")
 
-process.SiStripCondObjBuilderFromDb = cms.Service("SiStripCondObjBuilderFromDb")
-
+process.load("OnlineDB.SiStripO2O.SiStripO2OCalibrationFactors_cfi")
+process.SiStripCondObjBuilderFromDb = cms.Service("SiStripCondObjBuilderFromDb",
+    process.SiStripO2OCalibrationFactors
+)
 
 
 process.load("CondCore.DBCommon.CondDBCommon_cfi")
@@ -93,37 +95,31 @@ process.CommonSiStripPopConParams = cms.PSet(
     loggingOn = cms.untracked.bool(True)
 )
 
-process.load("OnlineDB.SiStripO2O.SiStripO2OCalibrationFactors_cfi")
 process.siStripPopConNoise = cms.EDAnalyzer("SiStripPopConNoise",
-    process.SiStripO2OCalibrationFactors,                                       
     process.CommonSiStripPopConParams,
     record = cms.string('SiStripNoisesRcd')
 )
 process.siStripPopConNoise.Source.name = 'siStripPopConNoise'
 
 process.siStripPopConPedestals = cms.EDAnalyzer("SiStripPopConPedestals",
-    process.SiStripO2OCalibrationFactors,                                       
     process.CommonSiStripPopConParams,
     record = cms.string('SiStripPedestalsRcd')
 )
 process.siStripPopConPedestals.Source.name = 'siStripPopConPedestals'
 
 process.siStripPopConThreshold = cms.EDAnalyzer("SiStripPopConThreshold",
-    process.SiStripO2OCalibrationFactors,                                            
     process.CommonSiStripPopConParams,
     record = cms.string('SiStripThresholdRcd')
 )
 process.siStripPopConThreshold.Source.name = 'siStripPopConThreshold'
 
 process.siStripPopConFedCabling = cms.EDAnalyzer("SiStripPopConFedCabling",
-    process.SiStripO2OCalibrationFactors,
     process.CommonSiStripPopConParams,
     record = cms.string('SiStripFedCablingRcd')
 )
 process.siStripPopConFedCabling.Source.name = 'siStripPopConFedCabling'
 
 process.siStripPopConBadStrip = cms.EDAnalyzer("SiStripPopConBadStrip",
-    process.SiStripO2OCalibrationFactors,
     process.CommonSiStripPopConParams,
     record = cms.string('SiStripBadStrip')
 )

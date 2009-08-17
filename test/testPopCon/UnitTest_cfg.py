@@ -4,12 +4,6 @@ process = cms.Process("o2o")
 
 process.MessageLogger = cms.Service("MessageLogger",
     debugModules = cms.untracked.vstring(''),
-    NoisesReader = cms.untracked.PSet(
-        threshold = cms.untracked.string('INFO')
-    ),
-    cout = cms.untracked.PSet(
-        threshold = cms.untracked.string('INFO')
-    ),
     destinations = cms.untracked.vstring('UnitTestWriter.log')
 )
 
@@ -22,6 +16,11 @@ process.source = cms.Source("EmptyIOVSource",
 
 process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(1)
+)
+
+process.load("OnlineDB.SiStripO2O.SiStripO2OCalibrationFactors_cfi")
+process.SiStripCondObjBuilderFromDb = cms.Service("SiStripCondObjBuilderFromDb",
+    process.SiStripO2OCalibrationFactors
 )
 
 process.load("CondCore.DBCommon.CondDBCommon_cfi")
@@ -48,9 +47,7 @@ process.CommonSiStripPopConParams = cms.PSet(
     loggingOn = cms.untracked.bool(True)
 )
 
-process.load("OnlineDB.SiStripO2O.SiStripO2OCalibrationFactors_cfi")
 process.siStripPopConNoise = cms.EDAnalyzer("SiStripPopConNoiseUnitTest",
-    process.SiStripO2OCalibrationFactors,
     process.CommonSiStripPopConParams,
     record = cms.string('SiStripNoisesRcd')
 )
